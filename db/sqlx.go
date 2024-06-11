@@ -1,4 +1,4 @@
-package db
+package mydb
 
 import (
 	"fmt"
@@ -7,10 +7,8 @@ import (
 	"time"
 )
 
-var Sqlx *sqlx.DB
-
 // 初始化数据库（sqlx）
-func InitSqlx(username string, password string, host string, port string, dbName string, maxIdle int, maxOpen int) {
+func InitSqlx(username string, password string, host string, port string, dbName string, maxIdle int, maxOpen int) *sqlx.DB {
 	connInfo := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		username,
 		password,
@@ -39,5 +37,5 @@ func InitSqlx(username string, password string, host string, port string, dbName
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	Sqlx = db
+	return db
 }

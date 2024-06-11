@@ -23,10 +23,8 @@ func TimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 	enc.AppendString(t.Format("2006-01-02 15:04:05.000"))
 }
 
-var Logger *zap.Logger
-
 // "info", 200, 30, 90, false, sys.ServerName
-func InitZap(co ...ConfigOption) {
+func InitZap(co ...ConfigOption) *zap.Logger {
 	ic := &InitConfig{
 		logPath:     "",
 		loglevel:    "info",
@@ -39,10 +37,10 @@ func InitZap(co ...ConfigOption) {
 	for _, ele := range co {
 		ele(ic)
 	}
-	initialize(ic)
+	return initialize(ic)
 }
 
-func initialize(initConfig *InitConfig) {
+func initialize(initConfig *InitConfig) *zap.Logger {
 	if initConfig.logPath == "" {
 		panic("日志路径不能为空")
 	}
@@ -108,7 +106,7 @@ func initialize(initConfig *InitConfig) {
 	// 设置初始化字段,如：添加一个服务器名称
 	filed := zap.Fields(zap.String("service", initConfig.serviceName))
 	// 构造日志
-	Logger = zap.New(core, caller, development, filed)
+	return zap.New(core, caller, development, filed)
 	//Logger = zap.New(core, filed)
 }
 
